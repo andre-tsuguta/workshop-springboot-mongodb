@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.andretsuguta.workshopmongo.domain.User;
 import com.andretsuguta.workshopmongo.dto.UserDTO;
 import com.andretsuguta.workshopmongo.services.UserService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping(value = "/users")
@@ -40,10 +42,10 @@ public class UserResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> insert(@RequestBody UserDTO obj){
-		User user = service.fromDto(obj);
+	public ResponseEntity<User> insert(@RequestBody UserDTO objDto){
+		User user = service.fromDto(objDto);
 		user = service.insert(user);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objDto.getId()).toUri();
 		return ResponseEntity.created(uri).body(user);
 	}
 	
@@ -51,5 +53,12 @@ public class UserResource {
 	public ResponseEntity<Void> delete(@PathVariable String id){
 		service.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<User> update(@PathVariable String id, @RequestBody UserDTO objDto) {
+		User obj = service.fromDto(objDto);
+		obj = service.update(id, obj);
+		return ResponseEntity.ok().body(obj);
 	}
 }
