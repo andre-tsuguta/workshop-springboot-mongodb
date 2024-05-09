@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.andretsuguta.workshopmongo.domain.Post;
 import com.andretsuguta.workshopmongo.domain.User;
 import com.andretsuguta.workshopmongo.dto.UserDTO;
 import com.andretsuguta.workshopmongo.services.UserService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -60,5 +61,11 @@ public class UserResource {
 		User obj = service.fromDto(objDto);
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@GetMapping(value = "/{id}/posts")
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
+		User user = service.findById(id);
+		return ResponseEntity.ok().body(user.getPosts());
 	}
 }
